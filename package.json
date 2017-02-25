@@ -1,0 +1,19 @@
+{
+  "name": "cherryjs",
+  "version": "1.0.0",
+  "description": "new way to compile Javascript/JSON/CSS to optimize size",
+  "main": "cherry.js",
+  "scripts": {
+    "test": "-c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "cherryjs"
+  },
+  "keywords": [
+    "compiler",
+    "compressor"
+  ],
+  "author": "Mahdi Jouini <mahdix18@gmail.com>",
+  "license": "MIT"
+}

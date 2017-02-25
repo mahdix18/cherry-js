@@ -1,0 +1,63 @@
+#!/usr/bin/env nodejs
+
+var cherry = require('./cherry');
+var path = require('path');
+var fs = require('fs');
+var x = new cherry();
+var extlist = [".js", ".json"];
+var extlistx = [".bin"];
+//https://gist.github.com/kethinov/6658166
+var walkSync = function (dir, filelist) {
+    var fs = fs || require('fs')
+        , files = fs.readdirSync(dir);
+    filelist = filelist || [];
+    files.forEach(function (file) {
+        if (fs.statSync(dir + file).isDirectory()) {
+            filelist = walkSync(dir + file + '/', filelist);
+        }
+        else {
+            filelist.push(dir + file);
+        }
+    });
+    return filelist;
+};
+var args = process.argv.slice(2);
+c = args.findIndex((e) => {
+    return e == "-c";
+});
+d = args.findIndex((e) => {
+    return e == "-d";
+});
+a = args.findIndex((e) => {
+    return e == "-a";
+});
+if (c != -1) {
+    args.splice(c);
+    //console.info("\x1b[34m", "reading file list");
+    var filelist = (walkSync("./"));
+    filelist.forEach(function (e, i) {
+        if (extlist.findIndex((ex) => {
+                return ex == path.extname(e);
+            }) != -1) {
+            console.log("reading file " + e);
+            var data = fs.readFileSync(e, "utf8");
+            console.log("compressing file " + e);
+            x.compress(data, e + ".bin");
+            console.log("saved file " + e + ".bin");
+            data = "";
+        }
+    });
+}
+if (d != -1) {
+    args.splice(d);
+    //console.info("\x1b[34m", "reading file list");
+    var filelist = (walkSync("./"));
+    filelist.forEach(function (e, i) {
+        if (extlistx.findIndex((ex) => {
+                return ex == path.extname(e);
+            }) != -1) {
+            console.log("reading file " + e);
+            x.decompress(e, e.slice(0, e.length - 4));
+        }
+    });
+}
